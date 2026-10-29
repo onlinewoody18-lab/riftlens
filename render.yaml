@@ -1,0 +1,21 @@
+# One-click setup for Render (render.com). Create a "Blueprint" from your GitHub copy of
+# RiftLens, then fill in RIOT_API_KEY and PUBLIC_HOSTS when Render asks for them.
+services:
+  - type: web
+    name: riftlens
+    runtime: docker
+    plan: starter            # a persistent disk needs a paid plan; collected games live on it
+    healthCheckPath: /api/status
+    envVars:
+      - key: RIOT_API_KEY    # your Riot PRODUCTION key (never commit it)
+        sync: false
+      - key: RIOT_PLATFORM   # region games are collected from: euw1, na1, kr, ...
+        value: euw1
+      - key: TRUST_PROXY     # Render's proxy adds the visitor's address; used for per-visitor limits
+        value: "1"
+      - key: PUBLIC_HOSTS    # your site's hostname(s), comma separated, e.g. riftlens.onrender.com,www.example.com
+        sync: false
+    disk:
+      name: riftlens-data
+      mountPath: /data
+      sizeGB: 2
